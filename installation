@@ -1,0 +1,48 @@
+#!/bin/bash
+# Indique au système que l'argument qui suit est le programme utilisé pour exécuter ce fichier
+# En règle générale, les "#" servent à mettre en commentaire le texte qui suit comme ici
+
+cd ~
+
+# Mise à jour de l'ordi
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get autoremove
+sudo apt-get purge
+
+# création d'une commande simplifié pour les mises à jour
+sudo echo "alias maj='sudo apt-get update && sudo apt-get upgrade && sudo apt-get autoremove && sudo apt-get purge" >> ~/.bashrc
+
+# installation de ros
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
+sudo apt-get update
+sudo apt-get install ros-kinetic-desktop-full
+echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+
+# Création du tuto test de ros
+echo "roscore" >> "Desktop/test ROS"
+echo "rosrun turtlesim turtlesim_node" >> "Desktop/test ROS"
+echo "rosrun turtlesim turtle_teleop_key" >> "Desktop/test ROS"
+echo "" >>  "Desktop/test ROS"
+echo "La troisième console doit être sélectionnée pour que ça fonctionne" >> "Desktop/test ROS"
+
+# Installation google chrome
+sudo sh -c 'echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
+wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install google-chrome-stable
+
+# Installation du simulateur de TutleBot
+sudo apt-get update
+sudo apt-get upgrade
+wget https://raw.githubusercontent.com/ROBOTIS-GIT/robotis_tools/master/install_ros_kinetic.sh && chmod 755 ./install_ros_kinetic.sh && bash ./install_ros_kinetic.sh
+sudo apt-get install ros-kinetic-joy ros-kinetic-teleop-twist-joy ros-kinetic-teleop-twist-keyboard ros-kinetic-laser-proc ros-kinetic-rgbd-launch ros-kinetic-depthimage-to-laserscan ros-kinetic-rosserial-arduino ros-kinetic-rosserial-python ros-kinetic-rosserial-server ros-kinetic-rosserial-client ros-kinetic-rosserial-msgs ros-kinetic-amcl ros-kinetic-map-server ros-kinetic-move-base ros-kinetic-urdf ros-kinetic-xacro ros-kinetic-compressed-image-transport ros-kinetic-rqt-image-view ros-kinetic-gmapping ros-kinetic-navigation ros-kinetic-interactive-markers
+cd ~/catkin_ws/src/
+git clone https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
+git clone https://github.com/ROBOTIS-GIT/turtlebot3.git
+cd ~/catkin_ws && catkin_make
+cd ~/catkin_ws/src/
+git clone https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git
+cd ~/catkin_ws && catkin_make
