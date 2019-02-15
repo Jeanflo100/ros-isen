@@ -157,3 +157,8 @@ if __name__ == '__main__':
 		move()
 	except rospy.ROSInterruptException:
 		pass
+
+	#while(1):
+		#events = get_gamepad()
+		#for event in events:
+			#print event.code, event.state, event.ev_type
