@@ -23,7 +23,6 @@ newLZmax = 100
 newRZmin = 0
 newRZmax = 100
 
-
 topicMaximas = [[[topicTXmin, topicTXmax], [topicTYmin, topicTYmax], [topicTZmin, topicTZmax]], [[topicRXmin, topicRXmax], [topicRYmin, topicRYmax], [topicRZmin, topicRZmax]], [[newLZmin, newLZmax], [newRZmin, newRZmax]]]
 
 topicName = '/cmd_vel'
@@ -58,7 +57,7 @@ def fonctionMapX_T(valeur, index1, index2):
 	moyennePlus = moyenne + (topicMaximas[index1][index2][1] - moyenne)/5
 	moyenneMoins = moyenne + (topicMaximas[index1][index2][0] - moyenne)/5
 	if((newValeur > min(moyennePlus, moyenneMoins)) and (newValeur < max(moyennePlus, moyenneMoins))):
-		newValeur = 0
+		newValeur = moyenne
 	return newValeur
 
 
