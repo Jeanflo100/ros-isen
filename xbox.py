@@ -18,8 +18,13 @@ topicRYmax = 10
 topicRZmin = -10
 topicRZmax = 10
 
+newLZmin = 0
+newLZmax = 100
+newRZmin = 0
+newRZmax = 100
 
-topicMaximas = [[[topicTXmin, topicTXmax], [topicTYmin, topicTYmax], [topicTZmin, topicTZmax]], [[topicRXmin, topicRXmax], [topicRYmin, topicRYmax], [topicRZmin, topicRZmax]]]
+
+topicMaximas = [[[topicTXmin, topicTXmax], [topicTYmin, topicTYmax], [topicTZmin, topicTZmax]], [[topicRXmin, topicRXmax], [topicRYmin, topicRYmax], [topicRZmin, topicRZmax]], [[newLZmin, newLZmax], [newRZmin, newRZmax]]]
 
 topicName = '/cmd_vel'
 
@@ -34,7 +39,13 @@ posRXmax = 32767
 posRYmin = 32767
 posRYmax = -32768
 
-xboxMaximas = [[[posLYmin, posLYmax], [posLXmin, posLXmax], []], [[], [posRYmin, posRYmax], [posRXmin, posRXmax]]]
+posLZmin = 0
+posLZmax = 1023
+posRZmin = 0
+posRZmax = 1023
+
+xboxMaximas = [[[posLYmin, posLYmax], [posLXmin, posLXmax], []], [[], [posRYmin, posRYmax], [posRXmin, posRXmax]], [[posLZmin, posLZmax], [posRZmin, posRZmax]]]
+
 
 
 def fonctionMap(x0, xMin0, xMax0, xMin1, xMax1):
@@ -52,7 +63,7 @@ def fonctionMapX_T(valeur, index1, index2):
 
 
 def move():
-	codes = [["ABS_Y", "ABS_X", ""], ["", "ABS_RY", "ABS_RX"]]
+	codes = [["ABS_Y", "ABS_X", ""], ["", "ABS_RY", "ABS_RX"], ["ABS_Z", "ABS_RZ"]]
 	rospy.init_node('Xbox', anonymous=True)
 	pub = rospy.Publisher(topicName, Twist, queue_size=10)
 	vel_msg = Twist()
@@ -110,30 +121,36 @@ def move():
 				if(event.code == "BTN_THUMBR"):
 					print "R3"
 					continue
-			if(event.code == "ABS_Z"):
-				print "L2"
-				continue
-			if(event.code == "ABS_RZ"):
-				print "R2"
-				continue
 			for i in range(len(codes)):
 				for j in range(len(codes[i])):
 					if(event.code == codes[i][j]):
 						pos = fonctionMapX_T(event.state, i, j)
 						if((i==0) and (j==0)):
 							vel_msg.linear.x = pos
-						elif((i==0) and (j==1)):
+							continue
+						if((i==0) and (j==1)):
 							vel_msg.linear.y = pos
-						elif((i==0) and (j==2)):
+							continue
+						if((i==0) and (j==2)):
 							vel_msg.linear.z = pos
-						elif((i==1) and (j==0)):
+							continue
+						if((i==1) and (j==0)):
 							vel_msg.angular.x = pos
-						elif((i==1) and (j==1)):
+							continue
+						if((i==1) and (j==1)):
 							vel_msg.angular.y = pos
-						elif((i==1) and (j==2)):
+							continue
+						if((i==1) and (j==2)):
 							vel_msg.angular.z = pos
+							continue
+						if((i==2) and (j==0)):
+							print "L2", pos
+							continue
+						if((i==2) and (j==1)):
+							print "R2", pos
+							continue
 		pub.publish(vel_msg)
-		rospy.loginfo(rospy.get_caller_id() + "\n" + str(vel_msg))
+		print rospy.get_caller_id() + "\n" + str(vel_msg)
 
 if __name__ == '__main__':
 	try:
